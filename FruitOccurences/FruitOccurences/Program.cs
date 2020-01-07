@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,12 +6,13 @@ namespace FruitOccurences
 {
     class Program
     {
+        int highestTotal = 0;
         static void Main(string[] args)
         {
             string[] fruits = new string[10];
             List<string> fruitStrings = new List<string>();
             Random random = new Random();
-
+            
             fruits[0] = "Apple";
             fruits[1] = "Banana";
             fruits[2] = "Kiwi";
@@ -25,17 +26,27 @@ namespace FruitOccurences
 
             for (int i = 0; i < fruits.Length; i++)
             {
-                int count = random.Next(1, 30);
+                int count = random.Next(1, 50);
                 for (int j = 0; j < count; j++)
                 {
                     fruitStrings.Add(fruits[i]);
                 }
             }
+            
+            string responseString = "";
 
-            Console.WriteLine("The fruit that occured the most frequently was " + FindMostFrequentFruit(fruitStrings));
+            List<string> mostFrequent = FindMostFrequentFruit(fruitStrings);
+
+            responseString = mostFrequent.Count == 1 ? "The fruit that occured the most frequently was: " : "The fruits that occured the most frequently were: ";
+
+            for (int i = 0; i < mostFrequent.Count; i++)
+            {
+                responseString += mostFrequent.Count > 1 && i < (mostFrequent.Count -1) ? mostFrequent[i] + ", " : mostFrequent[i];
+            }
+          
+            Console.WriteLine(responseString);
         }
-
-        static string FindMostFrequentFruit(List<string> fruitStrings)
+        static List<string> FindMostFrequentFruit(List<string> fruitStrings)
         {
             Dictionary<string, int> fruitDictionary = new Dictionary<string, int>();
 
@@ -52,7 +63,7 @@ namespace FruitOccurences
             }
 
             int highest = 0;
-            string returnString = "";
+            List<string> returnStrings = new List<string>();
             string times = "";
             foreach (var item in fruitDictionary)
             {
@@ -60,11 +71,18 @@ namespace FruitOccurences
                 Console.WriteLine(item.Key + " appeared " + item.Value + times);
                 if (item.Value > highest)
                 {
-                    highest = item.Value;
-                    returnString = item.Key;
+                    highest = item.Value;                 
                 }
             }
-            return returnString;
+            
+            foreach (var item in fruitDictionary)
+            {
+                if (item.Value == highest)
+                {
+                    returnStrings.Add(item.Key);
+                }
+            }
+            return returnStrings;
         }
     }
 }
